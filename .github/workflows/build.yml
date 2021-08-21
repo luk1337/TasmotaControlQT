@@ -1,0 +1,16 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:34
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+          dnf -y install cmake git ninja-build qt6-*-devel
+          cmake -G Ninja .
+          ninja
