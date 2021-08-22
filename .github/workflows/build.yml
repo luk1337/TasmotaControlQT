@@ -3,7 +3,7 @@ name: build
 on: [push, pull_request]
 
 jobs:
-  build:
+  linux:
     runs-on: ubuntu-latest
     container: fedora:34
 
@@ -12,5 +12,15 @@ jobs:
 
       - run: |
           dnf -y install cmake git ninja-build qt6-*-devel
+          cmake -G Ninja .
+          ninja
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+          brew install ninja qt
           cmake -G Ninja .
           ninja
