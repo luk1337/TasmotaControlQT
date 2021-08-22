@@ -49,14 +49,19 @@ public:
         speakersAction = std::make_unique<QAction>("glośniki ^.^", this);
         speakersAction->setCheckable(true);
 
+        quitAction = std::make_unique<QAction>("Quit", this);
+
         connect(lightsAction.get(), &QAction::triggered, this,
             [this] { networkAccessManager->get(QNetworkRequest(URL_TOGGLE_LIGHTS)); });
         connect(speakersAction.get(), &QAction::triggered, this,
             [this] { networkAccessManager->get(QNetworkRequest(URL_TOGGLE_SPEAKERS)); });
+        connect(quitAction.get(), &QAction::triggered, this, [] { qApp->quit(); });
 
         menu = std::make_unique<QMenu>(this);
         menu->addAction(lightsAction.get());
         menu->addAction(speakersAction.get());
+        menu->addSeparator();
+        menu->addAction(quitAction.get());
 
         return menu;
     }
@@ -70,6 +75,7 @@ private:
 
     std::unique_ptr<QAction> lightsAction;
     std::unique_ptr<QAction> speakersAction;
+    std::unique_ptr<QAction> quitAction;
     std::unique_ptr<QMenu> menu;
 };
 
