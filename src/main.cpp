@@ -18,6 +18,12 @@ public:
         trayIcon->setContextMenu(getMenu().get());
         trayIcon->show();
 
+        connect(trayIcon, &QSystemTrayIcon::activated, this, [trayIcon](auto reason) {
+            if (reason == QSystemTrayIcon::ActivationReason::Trigger) {
+                trayIcon->contextMenu()->popup(QCursor::pos());
+            }
+        });
+
         auto updateTimer = new QTimer(this);
         updateTimer->start(15000);
 
