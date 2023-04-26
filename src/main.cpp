@@ -30,21 +30,21 @@ public:
         connect(networkAccessManager.get(), &QNetworkAccessManager::finished, this, [&](QNetworkReply* reply) {
             auto data = reply->readAll();
 
-            if (reply->url() == URL_STATUS_ALL) {
+            if (reply->url() == URL_STATUS_LIGHTS || reply->url() == URL_TOGGLE_LIGHTS) {
                 lightsAction->setChecked(!reply->error() && data.contains(R"("POWER1":"ON")"));
-                speakersAction->setChecked(!reply->error() && data.contains(R"("POWER2":"ON")"));
-            } else if (reply->url() == URL_TOGGLE_LIGHTS) {
-                lightsAction->setChecked(!reply->error() && data.contains(R"("POWER1":"ON")"));
-            } else if (reply->url() == URL_TOGGLE_SPEAKERS) {
+            } else if (reply->url() == URL_STATUS_SPEAKERS || reply->url() == URL_TOGGLE_SPEAKERS) {
                 speakersAction->setChecked(!reply->error() && data.contains(R"("POWER2":"ON")"));
             }
         });
 
-        connect(updateTimer, &QTimer::timeout, this,
-            [this] { networkAccessManager->get(QNetworkRequest(URL_STATUS_ALL)); });
+        connect(updateTimer, &QTimer::timeout, this, [this] {
+            networkAccessManager->get(QNetworkRequest(URL_STATUS_LIGHTS));
+            networkAccessManager->get(QNetworkRequest(URL_STATUS_SPEAKERS));
+        });
 
         // Initialize states
-        networkAccessManager->get(QNetworkRequest(URL_STATUS_ALL));
+        networkAccessManager->get(QNetworkRequest(URL_STATUS_LIGHTS));
+        networkAccessManager->get(QNetworkRequest(URL_STATUS_SPEAKERS));
     }
 
     std::unique_ptr<QMenu>& getMenu()
@@ -73,7 +73,8 @@ public:
     }
 
 private:
-    const QUrl URL_STATUS_ALL = QUrl("http://192.168.1.225/cm?cmnd=POWER0");
+    const QUrl URL_STATUS_LIGHTS = QUrl("http://192.168.1.225/cm?cmnd=POWER1");
+    const QUrl URL_STATUS_SPEAKERS = QUrl("http://192.168.1.225/cm?cmnd=POWER2");
     const QUrl URL_TOGGLE_LIGHTS = QUrl("http://192.168.1.225/cm?cmnd=POWER1%202");
     const QUrl URL_TOGGLE_SPEAKERS = QUrl("http://192.168.1.225/cm?cmnd=POWER2%202");
 
