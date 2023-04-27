@@ -31,9 +31,9 @@ public:
             auto data = reply->readAll();
 
             if (reply->url() == URL_STATUS_LIGHTS || reply->url() == URL_TOGGLE_LIGHTS) {
-                lightsAction->setChecked(!reply->error() && data.contains(R"("POWER1":"ON")"));
+                lightsAction->setChecked(!reply->error() && data.contains(R"("POWER":"ON")"));
             } else if (reply->url() == URL_STATUS_SPEAKERS || reply->url() == URL_TOGGLE_SPEAKERS) {
-                speakersAction->setChecked(!reply->error() && data.contains(R"("POWER2":"ON")"));
+                speakersAction->setChecked(!reply->error() && data.contains(R"("POWER":"ON")"));
             }
         });
 
@@ -73,10 +73,10 @@ public:
     }
 
 private:
-    const QUrl URL_STATUS_LIGHTS = QUrl("http://192.168.1.225/cm?cmnd=POWER1");
-    const QUrl URL_STATUS_SPEAKERS = QUrl("http://192.168.1.225/cm?cmnd=POWER2");
-    const QUrl URL_TOGGLE_LIGHTS = QUrl("http://192.168.1.225/cm?cmnd=POWER1%202");
-    const QUrl URL_TOGGLE_SPEAKERS = QUrl("http://192.168.1.225/cm?cmnd=POWER2%202");
+    const QUrl URL_STATUS_LIGHTS = QUrl("http://192.168.1.227/cm?cmnd=POWER");
+    const QUrl URL_STATUS_SPEAKERS = QUrl("http://192.168.1.226/cm?cmnd=POWER");
+    const QUrl URL_TOGGLE_LIGHTS = QUrl(URL_STATUS_LIGHTS.toString() + "%202");
+    const QUrl URL_TOGGLE_SPEAKERS = QUrl(URL_STATUS_SPEAKERS.toString() + "%202");
 
     std::unique_ptr<QNetworkAccessManager> networkAccessManager;
 
