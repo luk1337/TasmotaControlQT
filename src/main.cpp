@@ -35,6 +35,8 @@ public:
             } else if (reply->url() == URL_STATUS_SPEAKERS || reply->url() == URL_TOGGLE_SPEAKERS) {
                 speakersAction->setChecked(!reply->error() && data.contains(R"("POWER":"ON")"));
             }
+
+            reply->deleteLater();
         });
 
         connect(updateTimer, &QTimer::timeout, this, [this] {
