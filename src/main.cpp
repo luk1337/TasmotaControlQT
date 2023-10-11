@@ -20,7 +20,9 @@ public:
 
         connect(trayIcon, &QSystemTrayIcon::activated, this, [trayIcon](auto reason) {
             if (reason == QSystemTrayIcon::ActivationReason::Trigger) {
-                trayIcon->contextMenu()->popup(QCursor::pos());
+                if (auto pos = QCursor::pos(); !pos.isNull()) {
+                    trayIcon->contextMenu()->popup(QCursor::pos());
+                }
             }
         });
 
